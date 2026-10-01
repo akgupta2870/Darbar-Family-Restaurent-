@@ -8,9 +8,10 @@ import { FirebaseService } from '../../services/firebaseService';
 interface DemoControllerProps {
   currentView: string;
   onNavigate: (view: string) => void;
+  onOpenNextJsInfo?: () => void;
 }
 
-export const DemoController: React.FC<DemoControllerProps> = ({ currentView, onNavigate }) => {
+export const DemoController: React.FC<DemoControllerProps> = ({ currentView, onNavigate, onOpenNextJsInfo }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { addToCart, setIsCartOpen } = useCart();
   const { activeOrder, updateOrderStatus, refreshOrders, showToast } = useOrder();
@@ -135,6 +136,19 @@ export const DemoController: React.FC<DemoControllerProps> = ({ currentView, onN
                   className="w-full text-left px-2.5 py-1.5 rounded bg-amber-100 hover:bg-amber-200 text-amber-950 font-semibold flex items-center justify-between border border-amber-300 transition-colors"
                 >
                   <span>Advance Status ({activeOrder.orderStatus} → Next)</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              )}
+
+              {onOpenNextJsInfo && (
+                <button
+                  onClick={onOpenNextJsInfo}
+                  className="w-full text-left px-2.5 py-1.5 rounded bg-stone-900 hover:bg-stone-800 text-amber-400 font-bold flex items-center justify-between transition-colors shadow-xs"
+                >
+                  <span className="flex items-center gap-1.5">
+                    <span className="font-mono text-[9px] bg-amber-400 text-stone-950 px-1 py-0.2 rounded font-black">Next</span>
+                    <span>Next.js 15 App Router Code</span>
+                  </span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </button>
               )}

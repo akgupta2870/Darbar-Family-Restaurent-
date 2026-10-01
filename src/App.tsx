@@ -31,6 +31,7 @@ import { MenuPage } from './components/menu/MenuPage';
 import { FoodDetailModal } from './components/menu/FoodDetailModal';
 import { CartDrawer } from './components/cart/CartDrawer';
 import { ReservationModal } from './components/home/ReservationModal';
+import { NextJsInfoModal } from './components/common/NextJsInfoModal';
 
 // Checkout & Order Tracking
 import { CheckoutPage } from './components/checkout/CheckoutPage';
@@ -40,14 +41,28 @@ import { OrderTrackingPage } from './components/order/OrderTrackingPage';
 // Admin Portal
 import { AdminLayout } from './components/admin/AdminLayout';
 
+const getViewFromPath = (): 'home' | 'menu' | 'offers' | 'track' | 'checkout' | 'confirmed' | 'story' | 'admin' => {
+  if (typeof window === 'undefined') return 'home';
+  const path = window.location.pathname.replace(/^\/+/, '').split('/')[0].toLowerCase();
+  if (path === 'menu') return 'menu';
+  if (path === 'offers') return 'offers';
+  if (path === 'track' || path === 'orders') return 'track';
+  if (path === 'checkout') return 'checkout';
+  if (path === 'confirmed') return 'confirmed';
+  if (path === 'story') return 'story';
+  if (path === 'admin') return 'admin';
+  return 'home';
+};
+
 function MainApp() {
-  const [currentView, setCurrentView] = useState<'home' | 'menu' | 'offers' | 'track' | 'checkout' | 'confirmed' | 'story' | 'admin'>('home');
+  const [currentView, setCurrentView] = useState<'home' | 'menu' | 'offers' | 'track' | 'checkout' | 'confirmed' | 'story' | 'admin'>(getViewFromPath);
   const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
   const [offers, setOffers] = useState<Offer[]>([]);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [selectedItemForDetails, setSelectedItemForDetails] = useState<MenuItem | null>(null);
   const [latestConfirmedOrder, setLatestConfirmedOrder] = useState<Order | null>(null);
   const [isGlobalReservationOpen, setIsGlobalReservationOpen] = useState(false);
+  const [isNextJsInfoOpen, setIsNextJsInfoOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   const { setIsCartOpen } = useCart();
@@ -69,11 +84,25 @@ function MainApp() {
   useEffect(() => {
     loadData();
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    const handlePopState = () => {
+      setCurrentView(getViewFromPath());
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
   }, []);
 
   const handleNavigate = (view: string) => {
     setCurrentView(view as any);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    const targetPath = view === 'home' ? '/' : `/${view}`;
+    try {
+      if (window.location.pathname !== targetPath) {
+        window.history.pushState({ view }, '', targetPath);
+      }
+    } catch (e) {
+      // safe fallback
+    }
   };
 
   const handleOrderSuccess = (order: Order) => {
@@ -96,7 +125,11 @@ function MainApp() {
           onRefreshOffers={loadData}
           customers={customers}
         />
-        <DemoController currentView={currentView} onNavigate={handleNavigate} />
+        <DemoController
+          currentView={currentView}
+          onNavigate={handleNavigate}
+          onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
+        />
       </div>
     );
   }
@@ -108,6 +141,7 @@ function MainApp() {
         currentView={currentView}
         onNavigate={handleNavigate}
         onOpenReservation={() => setIsGlobalReservationOpen(true)}
+        onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
       />
 
       {/* Global Notifications (Simulated WhatsApp & SMS Alerts) */}
@@ -202,6 +236,12 @@ function MainApp() {
         onClose={() => setIsGlobalReservationOpen(false)}
       />
 
+      {/* Next.js 15 App Router Architecture Modal */}
+      <NextJsInfoModal
+        isOpen={isNextJsInfoOpen}
+        onClose={() => setIsNextJsInfoOpen(false)}
+      />
+
       {/* Footer */}
       <Footer onNavigate={handleNavigate} />
 
@@ -209,7 +249,11 @@ function MainApp() {
       <MobileBottomNav currentView={currentView} onNavigate={handleNavigate} />
 
       {/* Pitch Demo Controller for 5-10 min restaurant owner meeting */}
-      <DemoController currentView={currentView} onNavigate={handleNavigate} />
+      <DemoController
+        currentView={currentView}
+        onNavigate={handleNavigate}
+        onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
+      />
     </div>
   );
 }

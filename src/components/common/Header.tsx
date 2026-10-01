@@ -6,9 +6,10 @@ interface HeaderProps {
   currentView: string;
   onNavigate: (view: string) => void;
   onOpenReservation?: () => void;
+  onOpenNextJsInfo?: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenReservation }) => {
+export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenReservation, onOpenNextJsInfo }) => {
   const { totalItemsCount, setIsCartOpen } = useCart();
 
   return (
@@ -95,6 +96,17 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenR
             >
               <Calendar className="w-3.5 h-3.5 text-amber-700" />
               <span>Book Table</span>
+            </button>
+          )}
+
+          {onOpenNextJsInfo && (
+            <button
+              onClick={onOpenNextJsInfo}
+              className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-stone-900 text-amber-400 hover:bg-stone-800 transition-colors cursor-pointer shadow-2xs"
+              title="View Next.js 15 App Router Architecture & Files"
+            >
+              <span className="font-mono text-[9px] bg-amber-400 text-stone-950 px-1 py-0.2 rounded font-black">Next</span>
+              <span>App Router</span>
             </button>
           )}
 

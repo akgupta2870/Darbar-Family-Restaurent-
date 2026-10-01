@@ -1,0 +1,6 @@
+{
+  "name": "Zaika Junction - Restaurant Online Ordering",
+  "description": "Authentic Flavours. Delivered Fresh. Branded online ordering platform, digital menu, real-time checkout & restaurant management dashboard.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

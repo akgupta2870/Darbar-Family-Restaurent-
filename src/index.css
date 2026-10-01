@@ -1,0 +1,34 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Playfair Display", Georgia, serif;
+  --font-sans: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-brand-gold: #b45309;
+  --color-brand-amber: #d97706;
+  --color-brand-light: #faf8f5;
+  --color-brand-card: #ffffff;
+  --color-brand-border: #e7e5e4;
+}
+
+:root {
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+}
+
+/* Custom scrollbars for light theme */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f5f3ef;
+}
+::-webkit-scrollbar-thumb {
+  background: #d6d3cd;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #a8a29e;
+}
+

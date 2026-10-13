@@ -109,9 +109,6 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             <button onClick={() => onNavigate('story')} className="hover:text-amber-800 font-medium transition-colors cursor-pointer">
               Our Story
             </button>
-            <button onClick={() => onNavigate('admin')} className="text-amber-800 hover:text-amber-900 font-bold transition-colors cursor-pointer">
-              Admin Dashboard
-            </button>
           </div>
         </div>
       </div>

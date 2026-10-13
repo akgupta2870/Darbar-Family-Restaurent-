@@ -44,13 +44,15 @@ import { AdminLayout } from './components/admin/AdminLayout';
 const getViewFromPath = (): 'home' | 'menu' | 'offers' | 'track' | 'checkout' | 'confirmed' | 'story' | 'admin' => {
   if (typeof window === 'undefined') return 'home';
   const path = window.location.pathname.replace(/^\/+/, '').split('/')[0].toLowerCase();
-  if (path === 'menu') return 'menu';
-  if (path === 'offers') return 'offers';
-  if (path === 'track' || path === 'orders') return 'track';
-  if (path === 'checkout') return 'checkout';
-  if (path === 'confirmed') return 'confirmed';
-  if (path === 'story') return 'story';
-  if (path === 'admin') return 'admin';
+  const hash = window.location.hash.replace(/^#\/?/, '').toLowerCase();
+  const search = new URLSearchParams(window.location.search);
+  if (path === 'admin' || hash === 'admin' || search.get('admin') === 'true' || search.get('view') === 'admin') return 'admin';
+  if (path === 'menu' || hash === 'menu') return 'menu';
+  if (path === 'offers' || hash === 'offers') return 'offers';
+  if (path === 'track' || path === 'orders' || hash === 'track') return 'track';
+  if (path === 'checkout' || hash === 'checkout') return 'checkout';
+  if (path === 'confirmed' || hash === 'confirmed') return 'confirmed';
+  if (path === 'story' || hash === 'story') return 'story';
   return 'home';
 };
 
@@ -124,11 +126,6 @@ function MainApp() {
           offers={offers}
           onRefreshOffers={loadData}
           customers={customers}
-        />
-        <DemoController
-          currentView={currentView}
-          onNavigate={handleNavigate}
-          onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
         />
       </div>
     );
@@ -248,12 +245,14 @@ function MainApp() {
       {/* Sticky Mobile Bottom Navigation */}
       <MobileBottomNav currentView={currentView} onNavigate={handleNavigate} />
 
-      {/* Pitch Demo Controller for 5-10 min restaurant owner meeting */}
-      <DemoController
-        currentView={currentView}
-        onNavigate={handleNavigate}
-        onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
-      />
+      {/* Demo helper available only if explicit ?demo=true in URL */}
+      {typeof window !== 'undefined' && window.location.search.includes('demo=true') && (
+        <DemoController
+          currentView={currentView}
+          onNavigate={handleNavigate}
+          onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
+        />
+      )}
     </div>
   );
 }

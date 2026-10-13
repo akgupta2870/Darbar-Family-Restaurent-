@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingBag, ShieldCheck, Crown, Calendar } from 'lucide-react';
+import { ShoppingBag, Crown, Calendar } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
 interface HeaderProps {
@@ -99,29 +99,6 @@ export const Header: React.FC<HeaderProps> = ({ currentView, onNavigate, onOpenR
             </button>
           )}
 
-          {onOpenNextJsInfo && (
-            <button
-              onClick={onOpenNextJsInfo}
-              className="hidden xl:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-bold bg-stone-900 text-amber-400 hover:bg-stone-800 transition-colors cursor-pointer shadow-2xs"
-              title="View Next.js 15 App Router Architecture & Files"
-            >
-              <span className="font-mono text-[9px] bg-amber-400 text-stone-950 px-1 py-0.2 rounded font-black">Next</span>
-              <span>App Router</span>
-            </button>
-          )}
-
-          <button
-            onClick={() => onNavigate('admin')}
-            className={`hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold border transition-colors cursor-pointer ${
-              currentView.startsWith('admin')
-                ? 'bg-amber-100 text-amber-900 border-amber-300'
-                : 'border-stone-200 text-stone-600 hover:text-stone-950 hover:bg-stone-50'
-            }`}
-            title="Switch to Restaurant Admin Dashboard"
-          >
-            <ShieldCheck className="w-3.5 h-3.5 text-amber-600" />
-            <span>Admin</span>
-          </button>
 
           {/* Golden Pill Cart button matching screenshot */}
           <button

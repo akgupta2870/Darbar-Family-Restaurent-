@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Tag, Users, Settings, ArrowLeft, ShieldCheck, Calendar } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { LayoutDashboard, ShoppingBag, UtensilsCrossed, Tag, Users, Settings, ArrowLeft, ShieldCheck, Calendar, Lock, KeyRound, LogOut } from 'lucide-react';
 import { useOrder } from '../../context/OrderContext';
 import { MenuItem, Offer, Customer } from '../../types';
 import { AdminDashboard } from './AdminDashboard';
@@ -27,8 +27,103 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
   onRefreshOffers,
   customers,
 }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(() => {
+    if (typeof window !== 'undefined') {
+      return sessionStorage.getItem('darbar_admin_auth') === 'true';
+    }
+    return false;
+  });
+  const [pinInput, setPinInput] = useState('');
+  const [pinError, setPinError] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'orders' | 'reservations' | 'menu' | 'offers' | 'customers' | 'settings'>('dashboard');
   const { orders, updateOrderStatus, restaurantSettings } = useOrder();
+
+  const handlePinSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanPin = pinInput.trim().toLowerCase();
+    if (cleanPin === '1234' || cleanPin === 'darbar' || cleanPin === 'admin' || cleanPin === 'darbar2024') {
+      setIsAuthenticated(true);
+      if (typeof window !== 'undefined') {
+        sessionStorage.setItem('darbar_admin_auth', 'true');
+      }
+      setPinError(false);
+    } else {
+      setPinError(true);
+    }
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    if (typeof window !== 'undefined') {
+      sessionStorage.removeItem('darbar_admin_auth');
+    }
+    onBackToStore();
+  };
+
+  if (!isAuthenticated) {
+    return (
+      <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4 text-stone-100">
+        <div className="bg-stone-950 border border-stone-800 rounded-3xl p-8 max-w-md w-full shadow-2xl text-center space-y-6">
+          <div className="w-16 h-16 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 mx-auto flex items-center justify-center shadow-inner">
+            <Lock className="w-8 h-8" />
+          </div>
+
+          <div>
+            <h1 className="font-serif text-2xl font-bold text-white tracking-wide">
+              Darbar Staff Portal
+            </h1>
+            <p className="text-xs text-stone-400 mt-1">
+              Restricted management area for kitchen and restaurant staff.
+            </p>
+          </div>
+
+          <form onSubmit={handlePinSubmit} className="space-y-4">
+            <div>
+              <label className="block text-[11px] font-semibold text-stone-400 text-left mb-1.5 uppercase tracking-wider">
+                Staff Passcode / PIN
+              </label>
+              <div className="relative">
+                <input
+                  type="password"
+                  value={pinInput}
+                  onChange={(e) => {
+                    setPinInput(e.target.value);
+                    if (pinError) setPinError(false);
+                  }}
+                  placeholder="Enter staff PIN (default: 1234)"
+                  autoFocus
+                  className="w-full bg-stone-900 border border-stone-700 focus:border-amber-500 rounded-xl px-4 py-3 text-sm text-white placeholder-stone-500 focus:outline-none transition-colors text-center tracking-widest font-mono"
+                />
+                <KeyRound className="w-4 h-4 text-stone-500 absolute right-3.5 top-3.5" />
+              </div>
+              {pinError && (
+                <p className="text-rose-400 text-xs mt-2 font-medium">
+                  Invalid PIN. Use default staff passcode <code className="bg-stone-800 px-1 py-0.5 rounded text-amber-300">1234</code> or <code className="bg-stone-800 px-1 py-0.5 rounded text-amber-300">darbar</code>.
+                </p>
+              )}
+            </div>
+
+            <button
+              type="submit"
+              className="w-full py-3 bg-amber-500 hover:bg-amber-600 active:scale-[0.99] text-stone-950 font-bold text-sm rounded-xl transition-all cursor-pointer shadow-lg shadow-amber-500/10"
+            >
+              Verify & Open Dashboard
+            </button>
+          </form>
+
+          <div className="pt-2 border-t border-stone-800/80">
+            <button
+              onClick={onBackToStore}
+              className="text-xs text-stone-400 hover:text-white flex items-center justify-center gap-1.5 mx-auto transition-colors cursor-pointer py-1"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Return to Public Menu & Ordering</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   const pendingOrdersCount = orders.filter((o) => o.orderStatus !== 'Delivered' && o.orderStatus !== 'Cancelled').length;
 
@@ -65,12 +160,21 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({
           </div>
         </div>
 
-        {/* Live Status indicator */}
+        {/* Live Status indicator & Logout */}
         <div className="flex items-center gap-3">
           <div className="hidden sm:flex items-center gap-2 text-xs text-stone-700 bg-emerald-50 px-3 py-1.5 rounded-lg border border-emerald-200 font-medium">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             <span>Kitchen Open & Accepting Orders</span>
           </div>
+
+          <button
+            onClick={handleLogout}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-rose-50 text-stone-700 hover:text-rose-700 text-xs font-semibold border border-stone-200 transition-colors cursor-pointer"
+            title="Lock Staff Portal and return to menu"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Lock & Exit</span>
+          </button>
         </div>
       </header>
 

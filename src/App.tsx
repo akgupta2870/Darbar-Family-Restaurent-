@@ -14,7 +14,6 @@ import { Header } from './components/common/Header';
 import { Footer } from './components/common/Footer';
 import { MobileBottomNav } from './components/common/MobileBottomNav';
 import { Toast } from './components/common/Toast';
-import { DemoController } from './components/common/DemoController';
 
 // Storefront Components
 import { Hero } from './components/home/Hero';
@@ -244,15 +243,6 @@ function MainApp() {
 
       {/* Sticky Mobile Bottom Navigation */}
       <MobileBottomNav currentView={currentView} onNavigate={handleNavigate} />
-
-      {/* Demo helper available only if explicit ?demo=true in URL */}
-      {typeof window !== 'undefined' && window.location.search.includes('demo=true') && (
-        <DemoController
-          currentView={currentView}
-          onNavigate={handleNavigate}
-          onOpenNextJsInfo={() => setIsNextJsInfoOpen(true)}
-        />
-      )}
     </div>
   );
 }

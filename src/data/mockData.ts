@@ -1,22 +1,29 @@
 import { MenuItem, Offer, Customer, Order, RestaurantSettings } from '../types';
 
-import heroImg from '../assets/images/hero_zaika_restaurant_1790844401677.jpg';
-import butterChickenImg from '../assets/images/food_butter_chicken_1790844412405.jpg';
-import biryaniImg from '../assets/images/food_dum_biryani_1790844424500.jpg';
-import paneerTikkaImg from '../assets/images/food_paneer_tikka_1790844435701.jpg';
-import dalMakhaniImg from '../assets/images/food_dal_makhani_1790844447225.jpg';
-import darbarInteriorImg from '../assets/images/darbar_fine_dining_interior_1790846695080.jpg';
-import darbarFeastImg from '../assets/images/darbar_family_feast_1790846708618.jpg';
+import heroImgRaw from '../assets/images/hero_zaika_restaurant_1790844401677.jpg';
+import butterChickenImgRaw from '../assets/images/food_butter_chicken_1790844412405.jpg';
+import biryaniImgRaw from '../assets/images/food_dum_biryani_1790844424500.jpg';
+import paneerTikkaImgRaw from '../assets/images/food_paneer_tikka_1790844435701.jpg';
+import dalMakhaniImgRaw from '../assets/images/food_dal_makhani_1790844447225.jpg';
+import darbarInteriorImgRaw from '../assets/images/darbar_fine_dining_interior_1790846695080.jpg';
+import darbarFeastImgRaw from '../assets/images/darbar_family_feast_1790846708618.jpg';
 
-export { 
-  heroImg, 
-  butterChickenImg, 
-  biryaniImg, 
-  paneerTikkaImg, 
-  dalMakhaniImg,
-  darbarInteriorImg,
-  darbarFeastImg,
+// Resolves both Vite string URLs and Next.js StaticImageData objects
+const toSrc = (img: unknown): string => {
+  if (typeof img === 'string') return img;
+  if (img && typeof img === 'object' && 'src' in img) {
+    return String((img as { src: string }).src);
+  }
+  return String(img);
 };
+
+export const heroImg = toSrc(heroImgRaw);
+export const butterChickenImg = toSrc(butterChickenImgRaw);
+export const biryaniImg = toSrc(biryaniImgRaw);
+export const paneerTikkaImg = toSrc(paneerTikkaImgRaw);
+export const dalMakhaniImg = toSrc(dalMakhaniImgRaw);
+export const darbarInteriorImg = toSrc(darbarInteriorImgRaw);
+export const darbarFeastImg = toSrc(darbarFeastImgRaw);
 
 export const INITIAL_RESTAURANT_SETTINGS: RestaurantSettings = {
   name: "Darbar Fine Dining & Family Restaurant",

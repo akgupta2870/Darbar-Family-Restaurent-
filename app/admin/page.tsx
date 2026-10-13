@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+import { CartProvider } from '../../src/context/CartContext';
 import { OrderProvider } from '../../src/context/OrderContext';
 import { FirebaseService } from '../../src/services/firebaseService';
 import { MenuItem, Offer, Customer } from '../../src/types';
@@ -34,18 +35,20 @@ export default function NextAdminPage() {
   };
 
   return (
-    <OrderProvider>
-      <div className="min-h-screen bg-[#f8f7f4] text-stone-900">
-        <Toast />
-        <AdminLayout
-          onBackToStore={handleBackToStore}
-          menuItems={menuItems}
-          onRefreshMenu={loadData}
-          offers={offers}
-          onRefreshOffers={loadData}
-          customers={customers}
-        />
-      </div>
-    </OrderProvider>
+    <CartProvider>
+      <OrderProvider>
+        <div className="min-h-screen bg-[#f8f7f4] text-stone-900">
+          <Toast />
+          <AdminLayout
+            onBackToStore={handleBackToStore}
+            menuItems={menuItems}
+            onRefreshMenu={loadData}
+            offers={offers}
+            onRefreshOffers={loadData}
+            customers={customers}
+          />
+        </div>
+      </OrderProvider>
+    </CartProvider>
   );
 }

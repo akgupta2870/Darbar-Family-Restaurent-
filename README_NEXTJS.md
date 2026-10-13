@@ -44,19 +44,42 @@ This application is built with a dual-mode architecture:
 
 ---
 
-## 🚀 How to Deploy as Next.js 15 to Vercel or Cloud Run
+## 🚀 Running Next.js 15 Directly
+
+All Next.js 15 dependencies and configs are pre-installed in the project. You can run Next.js immediately:
+
+### Run Next.js Dev Server (Port 3000):
+```bash
+npm run next:dev
+```
+
+### Build Next.js Production App:
+```bash
+npm run next:build
+```
+
+### Start Next.js Production Server:
+```bash
+npm run next:start
+```
+
+---
+
+## 🚀 Deploying to Vercel or Cloud Run
 
 ### Option 1: Deploy to Vercel (1-Click)
 1. Push this repository to GitHub.
 2. In [Vercel](https://vercel.com), click **Import Repository**.
-3. Use the `package.next.json` dependencies (or copy `package.next.json` over `package.json`).
-4. Framework Preset: **Next.js**.
-5. Click **Deploy**.
+3. Framework Preset: **Next.js**.
+4. Build Command: `npm run next:build` (or `npx next build`).
+5. Output Directory: `.next`.
+6. Click **Deploy**.
 
-### Option 2: Run locally as Next.js
+### Option 2: Run as standalone Next.js repository
 ```bash
 cp package.next.json package.json
 npm install
+npm run build
 npm run dev
 ```
 

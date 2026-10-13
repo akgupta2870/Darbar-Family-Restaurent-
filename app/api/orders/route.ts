@@ -1,4 +1,4 @@
-import { INITIAL_ORDERS } from '@/src/data/mockData';
+import { INITIAL_ORDERS } from '../../../src/data/mockData';
 
 export async function GET() {
   return Response.json({
